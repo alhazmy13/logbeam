@@ -80,7 +80,9 @@ The ``CloudWatchLogsHandler`` can be initialised with the following args
 - ``batch_count``- (default 10000) maximum number of log items in a batch before the batch must be transmitted to CloudWatch.
 - ``batch_size`` - (default 1024*1024) maximum size in bytes a batch of logs can reach before being transmitted to CloudWatch.
 - ``logs_client`` - (optional) an initialised boto3 ``CloudWatchLogs.Client``. if this isn't supplied the handler will initialise its own.
--  ``aws_access_key_id`` && ``aws_secret_access_key`` && ``region_name`` - (optional) it's an optional arguments to establish a new boto client; you can **ignore** it if you pass a `logs_client` or if you have a configured [`aws cli`](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html).
+-  ``aws_access_key_id`` && ``aws_secret_access_key`` && ``region_name`` - (optional) it's an optional arguments to establish a new boto client; you can **ignore** it if you pass a `logs_client` or if you have a configured `aws cli `__
+
+.. __: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
 
 IAM Permissions
 ---------------
