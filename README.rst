@@ -7,17 +7,18 @@ supplied by the ``awscli-cwlogs`` package.
 Logs are submitted in batches to the CloudWatch API, with configurable
 limits on the maximum age of messages before a partial batch is transmitted,
 and maximum batch sizes. These all match the same configuration options you'll
-find for `configuring the cwlogs agent`__
-
-.. __: http://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AgentReference.html
+find for [``configuring the cwlogs agent``](http://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AgentReference.html)
 
 
 Installation
 ------------
 
-::
+```bash
 
     pip install logbeam
+    
+```
+
 
 
 Usage
@@ -26,7 +27,7 @@ Usage
 Here's an example for setting up your root logging handler for use with
 logbeam's ``CloudWatchLogsHandler``
 
-::
+```python
 
     import logging
     from logbeam import CloudWatchLogsHandler
@@ -49,13 +50,15 @@ logbeam's ``CloudWatchLogsHandler``
     logger.addHandler(cw_handler)
 
     logger.info("Hello world!")
+```
+
 
 Warning: As mentioned in the snippet above, if you attach the handler to the root
 logger (``logging.getLogger()``) you need to disable propagation for the
 ``cwlogs`` and ``botocore`` loggers to prevent an infinite loop of logs. The
 following example sends logs from these loggers to stderr instead:
 
-::
+```python
 
     local_handler = logging.StreamHandler()
 
@@ -68,6 +71,7 @@ following example sends logs from these loggers to stderr instead:
         # Write logs to stderr instead
         lg.addHandler(local_handler)
 
+```
 
 Handler arguments
 -----------------
@@ -80,13 +84,15 @@ The ``CloudWatchLogsHandler`` can be initialised with the following args
 - ``batch_count``- (default 10000) maximum number of log items in a batch before the batch must be transmitted to CloudWatch.
 - ``batch_size`` - (default 1024*1024) maximum size in bytes a batch of logs can reach before being transmitted to CloudWatch.
 - ``logs_client`` - (optional) an initialised boto3 ``CloudWatchLogs.Client``. if this isn't supplied the handler will initialise its own.
+-  ``aws_access_key_id`` && ``aws_secret_access_key`` && ``region_name`` - (optional) it's an optional arguments to establish a new boto client; you can **ignore** it if you pass a `logs_client` or if you have a configured [`aws cli`](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html).
 
 IAM Permissions
 ---------------
 
 Here is the minimum IAM policy required for logbeam
 
-::
+```script
+
 
     {
         "Version": "2012-10-17",
@@ -113,6 +119,8 @@ Here is the minimum IAM policy required for logbeam
             }
         ]
     }
+    
+```
 
 
 

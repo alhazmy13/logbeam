@@ -8,12 +8,10 @@ from cwlogs.push import EventBatchPublisher, EventBatch, LogEvent
 from cwlogs.threads import BaseThread
 from six.moves import queue as Queue
 
-
 logger = logging.getLogger(__name__)
 
 
 class BatchedCloudWatchSink(BaseThread):
-
     """A sink for LogEvent objects which batches and uploads to CloudWatch logs
 
     It relies on the LogEvent, EventBatch and EventBatchPublisher from the
@@ -21,6 +19,7 @@ class BatchedCloudWatchSink(BaseThread):
     lifting - all this class does is add items to batches and submit batches
     to the EventBatchPublisher queue for publishing when they are full.
     """
+
     def __init__(
             self,
             logs_service,
@@ -127,12 +126,21 @@ class CloudWatchLogsHandler(logging.Handler):
             buffer_duration=10000,
             batch_count=10,
             batch_size=1024 * 1024,
+            aws_access_key_id=None,
+            aws_secret_access_key=None,
+            region_name=None,
             logs_client=None,
             *args, **kwargs):
         super(CloudWatchLogsHandler, self).__init__(*args, **kwargs)
         self.prev_event = None
         if logs_client is None:
-            logs_client = boto3.client('logs')
+            if all([aws_access_key_id, aws_secret_access_key, region_name]):
+                logs_client = boto3.client('logs',
+                                           region_name=region_name,
+                                           aws_access_key_id=aws_access_key_id,
+                                           aws_secret_access_key=aws_secret_access_key)
+            else:
+                logs_client = boto3.client('logs')
         self.sink = BatchedCloudWatchSink(
             logs_client,
             log_group_name,
